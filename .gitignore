@@ -1,4 +1,4 @@
 .Rproj.user/
 renv/
-*pdf/
-*png/
+*pdf
+*png
