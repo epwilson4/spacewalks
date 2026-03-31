@@ -1,3 +1,9 @@
+#Emma P Wilson
+#3-31-26
+#This code's purpose:
+
+
+
 # https://data.nasa.gov/resource/eva.json (with modifications)
 input_file = 'eva-data.json'
 output_file = 'eva-data.csv'
