@@ -1,17 +1,23 @@
 #Emma P Wilson
 #3-31-26
-#This code's purpose:
+#This code's purpose: To take in a data file regarding EVA times and provides a graph showing the total time spend in space from 1965 to present date
 
 
 
 # https://data.nasa.gov/resource/eva.json (with modifications)
-input_file = 'eva-data.json'
-output_file = 'eva-data.csv'
-graph_file = 'cumulative_eva_graph.png'
+
+#Files
+input_file = 'eva-data.json'#gives input data file a variable name"
+output_file = 'eva-data.csv'#gives output data file a variable name"
+graph_file = 'cumulative_eva_graph.png'#gives graph file a varible name"
 
 library(jsonlite)
 library(lubridate)
 library(tidyverse)
+
+#This reads data in the data and arranges
+eva_tbl <- jsonlite::fromJSON(input_file) |>
+  as_tibble()
 
 j_l <- read_json(input_file)
 data=as.data.frame(j_l[[1]])
@@ -22,7 +28,8 @@ for( i in 2:374){
   data =merge(data, as.data.frame(r),  all=TRUE)
 }
 #data.pop(0)
-## Comment out this bit if you don't want the spreadsheet
+
+#Writes a CVS
 write.csv(output_file)
 
 
@@ -69,12 +76,15 @@ date <- df$date
 time <- df$time
 cumulative_time <- duration_dt[2:length(duration_dt)]
 
+#plots the data
 cumulative_spacetime_plot <- ggplot(df, aes(x = date, y = cumulative_time)) +  
   geom_point() +
   geom_line() +  
   labs(x = "Year", y = "Total time spent in space to date (hours)") +
   theme_minimal()
 
+#saves the graph produced as a file
 ggsave(graph_file, plot = cumulative_spacetime_plot, width = 9, height = 5, dpi = 300)
 
+#prints graph 
 print(cumulative_spacetime_plot)
