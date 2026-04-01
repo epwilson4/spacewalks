@@ -17,13 +17,31 @@ input_file  <- "./eva-data.json"
 output_file <- "./eva-data.csv"
 graph_file  <- "./cumulative_eva_graph.png"
 
-# 1) Read JSON array into a tibble
+# 1) Title: Read EVA data from a JSON file into a tibble
+#'
+#' Reads a JSON file containing an array of records (objects) and returns the
+#' contents as a tibble for downstream analysis.
+#'
+#' @param input_file Path to a JSON file (character scalar). The file is expected
+#'   to contain a JSON array of objects, e.g. `[{"eva":"1", ...}, {"eva":"2", ...}]`.
+#' @return A tibble with one row per JSON record and one column per field.
+#' @examples
+#' eva_tbl <- read_json_to_dataframe("./eva-data.json")
+#' dplyr::glimpse(eva_tbl)Read JSON array into a tibble
 read_json_to_dataframe <- function(input_file) {
   jsonlite::fromJSON(input_file) |>
     tibble::as_tibble()
 }
 
-# 2) Convert + write to CSV (returns the cleaned df invisibly for chaining)
+# 2) Title: Convert + write to CSV (returns the cleaned df invisibly for chaining)
+#
+#' @param df A data frame or tibble continaing EVA data. Columns include 'eva', 'date', and 'duration'
+#' @param output_file A path to the output CSV file
+#'
+#' @returns The cleaned dataframe, rearranged 
+#'
+#' @examples
+#' eva_tble <- read_json_to_dataframe("./eva-data.json")
 write_dataframe_to_csv <- function(df, output_file) {
   df <- df |>
     dplyr::mutate(
@@ -37,6 +55,23 @@ write_dataframe_to_csv <- function(df, output_file) {
 }
 
 # 3) Plot cumulative time in space and save the figure
+#' Plot cumulative EVA time in space and save the figure
+#'
+#' Computes EVA duration in hours from a `duration` string column (expected format
+#' like `"H:MM"` or `"HH:MM"`), calculates cumulative time over chronological
+#' `date`, generates a ggplot line chart, saves it to disk, and prints it.
+#'
+#' @param df A data frame or tibble containing EVA records. Expected columns:
+#'   `date` (POSIXct or parseable datetime) and `duration` (character `"H:MM"`).
+#' @param graph_file Path to the output image file (character scalar), e.g.
+#'   `"./cumulative_eva_graph.png"`.
+#'
+#' @return Invisibly returns the ggplot object.
+#'
+#' @examples
+#' eva_tbl <- read_json_to_dataframe("./eva-data.json") |>
+#'   write_dataframe_to_csv("./eva-data.csv")
+#' plot_cumulative_time_in_space(eva_tbl, "./cumulative_eva_graph.png"
 plot_cumulative_time_in_space <- function(df, graph_file) {
   df <- df |>
     dplyr::arrange(date) |>
