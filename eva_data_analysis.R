@@ -19,12 +19,18 @@ read_json_to_dataframe <- function(input_file) {
     tibble::as_tibble()
 }
 
-# 2) Convert types + drop missing duration/date
-eva_tbl <- eva_tbl |>
-  mutate(
-    eva  = as.numeric(eva),
-    date = ymd_hms(date, quiet = TRUE) ) |>
-  filter(!is.na(duration), duration != "", !is.na(date))
+# 2) Convert + write to CSV
+write_dataframe_to_csv <- function(df, output_file) {
+  df <- df |>
+    dplyr::mutate(
+      eva  = as.numeric(eva),
+      date = lubridate::ymd_hms(date, quiet = TRUE)
+    ) |>
+    dplyr::filter(!is.na(duration), duration != "", !is.na(date))
+  
+  readr::write_csv(df, output_file)
+  df
+}
 
 # 3) Creates a CSV file
 readr::write_csv(eva_tbl, output_file)
