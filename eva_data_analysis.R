@@ -5,7 +5,6 @@
 
 
 # https://data.nasa.gov/resource/eva.json (with modifications)
-
 library(tidyverse) #tidyverse "contains" ggplot2
 library(jsonlite)
 library(lubridate)
@@ -19,12 +18,11 @@ graph_file  <- "./cumulative_eva_graph.png"
 eva_tbl <- jsonlite::fromJSON(input_file) |>
   as_tibble()
 
-subset=c('duration','date')
+
 eva_tbl <- eva_tbl |>
   mutate(
     eva  = as.numeric(eva),
-    date = ymd_hms(date, quiet = TRUE)
-  ) |>
+    date = ymd_hms(date, quiet = TRUE) ) |>
   filter(!is.na(duration), duration != "", !is.na(date))
 
 
@@ -45,7 +43,7 @@ eva_tbl <- eva_tbl |>
   )
 
 
-p <- ggplot(eva_tbl, aes(x = date, y = cumulative_time)) +
+cumulative_spacetime_plot <- ggplot(eva_tbl, aes(x = date, y = cumulative_time)) +
   geom_point() +
   geom_line() +
   labs(
@@ -54,8 +52,5 @@ p <- ggplot(eva_tbl, aes(x = date, y = cumulative_time)) +
   ) +
   theme_minimal()
 
-ggsave(graph_file, plot = p, width = 9, height = 5, dpi = 300)
-print(p)
-
-
-
+ggsave(graph_file, plot = cumulative_spacetime_plot, width = 9, height = 5, dpi = 300)
+print(cumulative_spacetime_plot)
