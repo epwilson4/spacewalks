@@ -14,8 +14,10 @@ output_file <- "./eva-data.csv"
 graph_file  <- "./cumulative_eva_graph.png"
 
 # 1) Reads JSON array into a tibble
-eva_tbl <- jsonlite::fromJSON(input_file) |>
-  as_tibble()
+read_json_to_dataframe <- function(input_file) {
+  jsonlite::fromJSON(input_file) |>
+    tibble::as_tibble()
+}
 
 # 2) Convert types + drop missing duration/date
 eva_tbl <- eva_tbl |>
