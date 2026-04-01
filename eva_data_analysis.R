@@ -19,7 +19,7 @@ read_json_to_dataframe <- function(input_file) {
     tibble::as_tibble()
 }
 
-# 2) Convert + write to CSV
+# 2) Convert + clean + write to CSV
 write_dataframe_to_csv <- function(df, output_file) {
   df <- df |>
     dplyr::mutate(
@@ -32,8 +32,11 @@ write_dataframe_to_csv <- function(df, output_file) {
   df
 }
 
-# 3) Creates a CSV file
-readr::write_csv(eva_tbl, output_file)
+#Pipeline
+
+#calling functions
+eva_tbl <- read_json_to_dataframe(input_file)
+eva_tbl <- write_dataframe_to_csv(eva_tbl, output_file)
 
 # 4) Sorts data by date
 eva_tbl <- eva_tbl |>
